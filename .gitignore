@@ -1,27 +1,61 @@
-*.log
-.DS_Store
+# --- Package Managers ---
+/node_modules
+/vendor
+/stubs
+
+*.zip
+
+# --- Environment & Keys ---
 .env
 .env.backup
 .env.production
-.phpactor.json
 .phpunit.result.cache
-/.codex
-/.cursor/
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
-/node_modules
-/public/build
-/public/fonts-manifest.dev.json
+Homestead.json
+Homestead.yaml
+docker-compose.override.yml
+auth.json
+
+# --- Laravel Specific ---
 /public/hot
 /public/storage
 /storage/*.key
-/storage/pail
-/vendor
-_ide_helper.php
-Homestead.json
-Homestead.yaml
+
+# --- Framework Cache & Logs ---
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*
+
+# --- Compiled Assets (Vite/Mix) ---
+# Note: On shared hosting, you might WANT to push /public/build
+# if you cannot run 'npm run build' on the server.
+# Otherwise, keep it ignored.
+/public/build
+
+# --- Testing & Tools ---
+.phpunit.result.cache
+.phpunit.cache
+/.project
+/.phpstorm.meta.php
+/_ide_helper.php
+/_ide_helper_models.php
+/.vscode
+
+# --- OS Specific ---
+.DS_Store
 Thumbs.db
+
+
+
+
+npm-debug.log
+yarn-error.log
+/.idea
+
+*.sql filter=lfs diff=lfs merge=lfs -text
+
+backup.vue
+LaravelCommandNote.md
+
+payroll_db.sql
