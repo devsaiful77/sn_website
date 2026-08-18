@@ -1,0 +1,3 @@
+<template>
+  Gellary Page
+</template>
