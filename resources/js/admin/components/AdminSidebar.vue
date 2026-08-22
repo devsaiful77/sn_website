@@ -3,6 +3,7 @@
 const primary = [
   { to: '/admin',           icon: '▚', label: 'Dashboard', exact: true },
 ]
+
 </script>
 
 <template>

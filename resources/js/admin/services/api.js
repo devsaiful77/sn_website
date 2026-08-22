@@ -43,6 +43,13 @@ const DEMO_USER = {
 }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms))
 
+// Sample data used only while MOCK_MODE = true.
+const MOCK_MESSAGES = [
+  { id: 1, name: 'Rafiq Hasan', email: 'rafiq@example.com', phone: '+880 1712-000000', subject: 'Pipeline fabrication quote', message: 'We need a quote for fabricating carbon-steel piping for a new boiler line. Please advise lead time and pricing.', is_read: false, created_at: '2026-08-20T09:12:00Z' },
+  { id: 2, name: 'Karim Iqbal', email: 'karim@example.com', phone: '', subject: 'Site visit request', message: 'Can your team visit our factory in Tongi next week to assess a structural steel platform installation?', is_read: false, created_at: '2026-08-19T14:40:00Z' },
+  { id: 3, name: 'Nusrat Jahan', email: 'nusrat@example.com', phone: '+880 1913-111111', subject: 'Maintenance contract', message: 'Interested in an annual preventive maintenance contract for our compressors and pumps.', is_read: true, created_at: '2026-08-18T11:05:00Z' },
+]
+
 async function mockLogin({ email, password }) {
   await wait(600)
   if (email.trim().toLowerCase() !== DEMO_USER.email || password !== DEMO_USER.password) {
@@ -74,6 +81,26 @@ export const api = {
       return { name: DEMO_USER.name, email: DEMO_USER.email, role: DEMO_USER.role }
     }
     return http('/me')
+  },
+
+  // ---- contact messages (dashboard) ----
+  messages: {
+    async list() {
+      if (MOCK_MODE) {
+        await wait(300)
+        return MOCK_MESSAGES
+      }
+      return http('/messages')
+    },
+    async remove(id) {
+      if (MOCK_MODE) {
+        await wait(200)
+        const i = MOCK_MESSAGES.findIndex((m) => m.id === id)
+        if (i > -1) MOCK_MESSAGES.splice(i, 1)
+        return { message: 'deleted' }
+      }
+      return http(`/messages/${id}`, { method: 'DELETE' })
+    },
   },
 }
 

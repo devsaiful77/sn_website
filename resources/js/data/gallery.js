@@ -1,3 +1,10 @@
+// resources/js/data/gallery.js
+// Gallery items for the public /gallery page.
+// type: 'image' | 'video'
+//  - image: needs `src` (full-size) and optional `thumb`
+//  - video: needs `src` (mp4/webm) and `poster` (thumbnail shown in the grid)
+// Replace these paths with your real files (e.g. /storage/gallery/...).
+
 export const galleryItems = [
   { id: 1, type: 'image', src: '/gallery/pipeline-fab.jpg',   title: 'Pipeline Fabrication',    tag: 'Fabrication' },
   { id: 2, type: 'video', src: '/gallery/site-work.mp4',      poster: '/gallery/site-work.jpg', title: 'On-Site Erection',        tag: 'Field Work', duration: '1:24' },
