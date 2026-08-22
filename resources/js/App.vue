@@ -1,26 +1,35 @@
 <script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import TopBar from './components/TopBar.vue'
 import SiteHeader from './components/SiteHeader.vue'
 import MainNav from './components/MainNav.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import WhatsAppFloat from './components/WhatsAppFloat.vue'
 import BackToTop from './components/BackToTop.vue'
+
+const route = useRoute()
+const isAdmin = computed(() => route.path.startsWith('/admin'))
 </script>
 
 <template>
-  <TopBar />
-  <SiteHeader />
-  <MainNav />
+  <template v-if="!isAdmin">
+    <TopBar />
+    <SiteHeader />
+    <MainNav />
+  </template>
 
-  <router-view v-slot="{ Component, route }">
+  <router-view v-slot="{ Component, route: r }">
     <transition name="fade" mode="out-in">
-      <component :is="Component" :key="route.path" />
+      <component :is="Component" :key="r.path" />
     </transition>
   </router-view>
 
-  <SiteFooter />
-  <WhatsAppFloat />
-  <BackToTop />
+  <template v-if="!isAdmin">
+    <SiteFooter />
+    <WhatsAppFloat />
+    <BackToTop />
+  </template>
 </template>
 
 <style>

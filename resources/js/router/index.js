@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { adminRoutes, adminGuard } from '../admin/router'
 
 const routes = [
   { path: '/', name: 'home', component: () => import('../views/HomeView.vue') },
@@ -7,7 +8,9 @@ const routes = [
   { path: '/projects', name: 'projects', component: () => import('../views/ProjectsView.vue') },
   { path: '/gallery', name: 'gallery', component: () => import('../views/GalleryView.vue') },
   { path: '/why-choose-us', name: 'why', component: () => import('../views/WhyChooseView.vue') },
-  { path: '/contact-us', name: 'contact', component: () => import('../views/ContactView.vue') }
+  { path: '/contact-us', name: 'contact', component: () => import('../views/ContactView.vue') },
+  ...adminRoutes,
+
 ]
 
 const router = createRouter({
@@ -20,5 +23,7 @@ const router = createRouter({
     return { top: 0 }
   }
 })
+
+router.beforeEach(adminGuard)
 
 export default router

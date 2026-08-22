@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import './assets/css/style.css'
+import './admin/admin.css'
 import App from './App.vue'
 import router from './router'
 import { revealDirective } from './directives/reveal'
