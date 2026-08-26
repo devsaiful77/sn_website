@@ -19,7 +19,9 @@ import { projects } from '../data/projects'
       <div class="row g-4" v-reveal>
         <div v-for="(p, i) in projects" :key="i" class="col-md-6 col-lg-4">
           <div class="project-card" style="width:100%; aspect-ratio:4/3.4;">
-            <div class="pc-bg">{{ p.icon }}</div>
+            <div class="pc-bg">
+              <img :src="p.icon" alt="">
+            </div>
             <div class="pc-overlay"><span class="pc-label">{{ p.label }}</span></div>
           </div>
         </div>

@@ -26,14 +26,6 @@ export const adminRoutes = [
     children: [
       { path: '',          name: 'admin.dashboard', component: Dashboard, meta: { title: 'Dashboard' } },
       { path: 'services',  name: 'admin.services',  component: Services,  meta: { title: 'Services' } },
-      // Placeholders — build these next, same pattern as Services.vue:
-      // { path: 'projects',     component: () => import('./pages/Projects.vue'),     meta: { title: 'Projects' } },
-      // { path: 'gallery',      component: () => import('./pages/Gallery.vue'),      meta: { title: 'Gallery' } },
-      // { path: 'testimonials', component: () => import('./pages/Testimonials.vue'), meta: { title: 'Testimonials' } },
-      // { path: 'messages',     component: () => import('./pages/Messages.vue'),     meta: { title: 'Enquiries' } },
-      // { path: 'site',         component: () => import('./pages/SiteContent.vue'),  meta: { title: 'Site Content' } },
-      // { path: 'users',        component: () => import('./pages/Users.vue'),        meta: { title: 'Admin Users' } },
-
       // Catch-all for any unknown /admin/* path — renders inside the layout.
       { path: ':pathMatch(.*)*', name: 'admin.notfound', component: NotFound, meta: { title: 'Not Found' } },
     ],
