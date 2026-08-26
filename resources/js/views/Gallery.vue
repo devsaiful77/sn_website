@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { galleryItems } from '../data/gallery'
 
 // ---- filtering ----
@@ -13,10 +13,38 @@ const items = computed(() =>
   filter.value === 'all' ? galleryItems : galleryItems.filter((i) => i.type === filter.value)
 )
 
+// ---- YouTube helpers ----
+function youtubeId(url) {
+  if (!url) return null
+  // Improved regex to safely extract 11-char YouTube ID ignoring query params like ?si=
+  const m = String(url).match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
+  return m ? m[1] : null
+}
+function isYoutube(item) {
+  return item?.type === 'video' && !!youtubeId(item.src)
+}
+function youtubeEmbed(url) {
+  const id = youtubeId(url)
+  return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1` : null
+}
+function youtubeThumb(url) {
+  const id = youtubeId(url)
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null
+}
+function tilePoster(item) {
+  if (item.type === 'video') return item.poster || youtubeThumb(item.src)
+  return item.thumb || item.src
+}
+function onTileImgError(e, item) {
+  const t = youtubeThumb(item.src)
+  if (item.type === 'video' && t && e.target.src !== t) e.target.src = t
+}
+
 // ---- lightbox ----
-const index = ref(-1)               // -1 = closed
+const index = ref(-1)             // -1 = closed
 const current = computed(() => (index.value > -1 ? items.value[index.value] : null))
 const videoEl = ref(null)
+const frameEl = ref(null)
 
 function open(i) {
   index.value = i
@@ -39,14 +67,14 @@ function pauseVideo() {
   if (videoEl.value) { videoEl.value.pause(); videoEl.value.currentTime = 0 }
 }
 
-// ---- fullscreen for videos ----
+// ---- fullscreen ----
 function goFullscreen() {
-  const el = videoEl.value
+  const el = frameEl.value || videoEl.value
   if (!el) return
   if (el.requestFullscreen) el.requestFullscreen()
-  else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen() // iOS Safari
+  else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen() 
   else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen()
-  el.play?.()
+  if (videoEl.value) videoEl.value.play?.()
 }
 
 // ---- keyboard ----
@@ -94,9 +122,10 @@ onUnmounted(() => { document.removeEventListener('keydown', onKey); document.bod
             @click="open(i)"
           >
             <img
-              :src="item.type === 'video' ? item.poster : (item.thumb || item.src)"
+              :src="tilePoster(item)"
               :alt="item.title"
               loading="lazy"
+              @error="onTileImgError($event, item)"
             />
             <span class="gal-tile-overlay">
               <span v-if="item.type === 'video'" class="gal-play">▶</span>
@@ -125,7 +154,20 @@ onUnmounted(() => { document.removeEventListener('keydown', onKey); document.bod
 
           <!-- video -->
           <div v-else class="gal-lb-video">
+            <!-- YouTube -> iframe embed -->
+            <iframe
+              v-if="isYoutube(current)"
+              ref="frameEl"
+              :src="youtubeEmbed(current.src)"
+              class="gal-lb-media gal-lb-frame"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+
+            <!-- self-hosted mp4 -> native video -->
             <video
+              v-else
               ref="videoEl"
               :src="current.src"
               :poster="current.poster"
@@ -134,6 +176,7 @@ onUnmounted(() => { document.removeEventListener('keydown', onKey); document.bod
               playsinline
               preload="metadata"
             ></video>
+
             <button class="gal-fs-btn" @click="goFullscreen">⛶ Fullscreen</button>
           </div>
 
@@ -215,7 +258,6 @@ onUnmounted(() => { document.removeEventListener('keydown', onKey); document.bod
   box-shadow: 0 6px 20px rgba(0,0,0,.3);
 }
 .gal-play { padding-left: 4px; }
-/* video tiles show the play affordance even without hover */
 .gal-tile.is-video .gal-tile-overlay { opacity: 1; background: linear-gradient(180deg, rgba(13,40,73,.15), rgba(13,40,73,.45)); }
 
 .gal-tile-meta {
@@ -245,7 +287,8 @@ onUnmounted(() => { document.removeEventListener('keydown', onKey); document.bod
   display: block; width: 100%; max-height: 78vh; object-fit: contain;
   border-radius: 10px; background: #000;
 }
-.gal-lb-video { position: relative; }
+.gal-lb-video { position: relative; width: 100%; }
+.gal-lb-frame { width: 100%; aspect-ratio: 16 / 9; height: auto; max-height: 78vh; border: 0; }
 .gal-fs-btn {
   position: absolute; top: 12px; right: 12px;
   background: rgba(9,24,41,.72); color: #fff; border: 1px solid rgba(255,255,255,.25);

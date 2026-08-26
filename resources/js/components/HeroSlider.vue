@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { heroSlides } from '../data/misc'
+import { asset } from '../services/config'
 
 const index = ref(0)
 let timer = null
@@ -31,6 +32,21 @@ function spawnSpark() {
   }, 1700)
 }
 
+// Build the background style for a slide.
+// When the slide has an image, layer overlay + image and force cover/center
+// so we don't depend on external CSS. No opaque bg div on top of it.
+function slideStyle(slide) {
+  if (slide.image) {
+    return {
+      backgroundImage: `${slide.overlay}, url(${asset(slide.image)})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+    }
+  }
+  return { background: slide.bg }
+}
+
 onMounted(() => {
   restart()
   sparkTimer = setInterval(spawnSpark, 180)
@@ -48,9 +64,14 @@ onUnmounted(() => {
       :key="i"
       class="hero-slide"
       :class="{ active: i === index }"
+      :style="slideStyle(slide)"
     >
-      <div class="slide-bg" :style="{ background: slide.bg }"></div>
-      <div class="slide-overlay"></div>
+      <!-- Only render the solid gradient + overlay when there is NO image,
+           otherwise these opaque layers cover the background image. -->
+      <template v-if="!slide.image">
+        <div class="slide-bg" :style="{ background: slide.bg }"></div>
+        <div class="slide-overlay"></div>
+      </template>
 
       <div v-if="slide.sparks && i === index" class="spark-field">
         <span

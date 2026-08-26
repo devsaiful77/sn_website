@@ -29,8 +29,14 @@ export const processSteps = [
   { title: 'Handover', text: 'Final inspection, testing and sign-off before we call it done.' }
 ]
 
+// Each slide now has:
+//   image   -> file inside public/ (resolved with asset() in the component)
+//   overlay -> dark gradient layered OVER the image so white text stays readable
+// `bg` is kept as a fallback for browsers/paths where the image is missing.
 export const heroSlides = [
   {
+    image: 'Contents/images/slider/01-hero-welding.jpg',
+    overlay: 'linear-gradient(100deg, rgba(6,16,33,.92) 0%, rgba(10,31,61,.72) 44%, rgba(18,58,107,.30) 100%)',
     bg: 'linear-gradient(120deg,#0a1f3d,#123a6b 55%,#1d4d85)',
     title: 'ENGINEERING',
     accent: 'SOLUTIONS',
@@ -41,6 +47,8 @@ export const heroSlides = [
     sparks: true
   },
   {
+    image: 'Contents/images/slider/02-fabrication.jpg',
+    overlay: 'linear-gradient(100deg, rgba(5,14,28,.9) 0%, rgba(13,45,80,.68) 46%, rgba(29,77,133,.28) 100%)',
     bg: 'linear-gradient(120deg,#071a33,#1d4d85 60%,#1d63d8)',
     title: 'PRECISION',
     accent: 'FABRICATION',
@@ -51,6 +59,8 @@ export const heroSlides = [
     sparks: false
   },
   {
+    image: 'Contents/images/slider/03-structural.jpg',
+    overlay: 'linear-gradient(100deg, rgba(7,20,40,.9) 0%, rgba(11,37,69,.66) 48%, rgba(18,58,107,.26) 100%)',
     bg: 'linear-gradient(120deg,#0b2545,#0a1f3d 50%,#123a6b)',
     title: '10+ YEARS OF',
     accent: 'TRUSTED SERVICE',

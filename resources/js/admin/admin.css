@@ -3,9 +3,6 @@
    Prefixed with .sn- / .admin- so it never collides with the
    public site's global style.css.
    ============================================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
 :root {
   /* palette */
   --sn-ink:      #0c1f34;   /* sidebar deep steel navy */

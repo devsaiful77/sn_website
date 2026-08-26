@@ -1,6 +1,7 @@
 <script setup>
 import HeroSlider from '../components/HeroSlider.vue'
 import ServiceRail from '../components/ServiceRail.vue'
+import AboutSection from '../components/AboutSection.vue'
 import ProjectRail from '../components/ProjectRail.vue'
 import StatsBand from '../components/StatsBand.vue'
 import WhyGrid from '../components/WhyGrid.vue'
@@ -13,21 +14,6 @@ import { whyReasons } from '../data/misc'
 <template>
   <div>
   <HeroSlider />
-
-  <!-- LOGOS -->
-  <section class="section-tight" v-reveal>
-    <div class="container-xl">
-      <p class="text-muted-nx mb-tiny" style="font-size:13px;">Trusted by teams across textile, chemical and logistics sectors</p>
-      <div class="logo-strip">
-        <span class="logo-chip">Northline</span>
-        <span class="logo-chip">Reef Retail</span>
-        <span class="logo-chip">Fintra</span>
-        <span class="logo-chip">Lumio</span>
-        <span class="logo-chip">Kavo Textiles</span>
-        <span class="logo-chip">Orbital Chem</span>
-      </div>
-    </div>
-  </section>
 
   <!-- SERVICES -->
   <section class="section" id="services">
@@ -50,37 +36,7 @@ import { whyReasons } from '../data/misc'
   <StatsBand />
 
   <!-- ABOUT TEASER -->
-  <section class="section" id="about">
-    <div class="container-xl">
-      <div class="row g-5 align-items-center">
-        <div class="col-lg-5" v-reveal="'fade-left'">
-          <div class="about-media">
-            <div class="photo-block">🏭</div>
-            <div class="exp-badge">
-              <div class="n">10+</div>
-              <div class="l">Years Exp.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-7" v-reveal="'fade-right'">
-          <span class="eyebrow">About Us</span>
-          <h2 class="section-title" style="margin-bottom:16px;">SN Engineering Works</h2>
-          <p class="section-sub" style="margin-top:0;">SN Engineering Works is a trusted name in the field of mechanical fabrication, industrial piping, and maintenance services.</p>
-          <p class="section-sub">We are committed to delivering high quality engineering solutions with safety, precision and on-time completion.</p>
-
-          <ul class="check-list row">
-            <li class="col-md-6">Experienced &amp; Skilled Team</li>
-            <li class="col-md-6">Modern Tools &amp; Equipment</li>
-            <li class="col-md-6">Quality Workmanship</li>
-            <li class="col-md-6">Customer Satisfaction Our Priority</li>
-          </ul>
-
-          <router-link to="/about-us" class="btn btn-outline-light" style="border-color:var(--navy); color:var(--navy); margin-top:10px;">More About Us →</router-link>
-        </div>
-      </div>
-    </div>
-  </section>
+  <AboutSection />
 
   <!-- WHY CHOOSE US -->
   <section class="section section-soft" id="why">
