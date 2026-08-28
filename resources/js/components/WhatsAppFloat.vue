@@ -1,3 +1,18 @@
+<script setup>
+import { onMounted } from 'vue'
+import { useSettings } from '../composables/useSettings'
+
+const { settings, load } = useSettings()
+onMounted(load)
+</script>
+
 <template>
-  <a href="https://wa.me/8801911234567" class="wa-float" aria-label="Chat on WhatsApp">💬</a>
+  <a
+    v-if="settings.whatsapp"
+    :href="`https://wa.me/${settings.whatsapp}`"
+    class="wa-float"
+    target="_blank"
+    rel="noopener"
+    aria-label="Chat on WhatsApp"
+  >💬</a>
 </template>

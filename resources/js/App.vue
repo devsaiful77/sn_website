@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import TopBar from './components/TopBar.vue'
 import SiteHeader from './components/SiteHeader.vue'
@@ -7,9 +7,16 @@ import MainNav from './components/MainNav.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import WhatsAppFloat from './components/WhatsAppFloat.vue'
 import BackToTop from './components/BackToTop.vue'
+import { useSettings } from './composables/useSettings'
 
 const route = useRoute()
 const isAdmin = computed(() => route.path.startsWith('/admin'))
+
+// Load site settings (logo, phone, email, address, socials...) once, early,
+// so every component that reads `settings` from useSettings() already has
+// the data by the time it renders (or reacts to it once the fetch lands).
+const { load } = useSettings()
+onMounted(load)
 </script>
 
 <template>

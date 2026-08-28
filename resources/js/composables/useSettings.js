@@ -23,7 +23,7 @@ export function useSettings() {
   async function load(force = false) {
     if ((meta.loaded || meta.loading) && !force) return promise
     meta.loading = true
-    promise = fetch(`${API_BASE_URL}/settings`, { headers: { Accept: 'application/json' } })
+    promise = fetch(`${API_BASE_URL}/api/settings`, { headers: { Accept: 'application/json' } })
       .then((r) => (r.ok ? r.json() : {}))
       .then((data) => { Object.assign(settings, data || {}); meta.loaded = true })
       .catch(() => { /* keep defaults / empty on failure */ })
