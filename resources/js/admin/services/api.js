@@ -4,9 +4,10 @@
 // Real auth is now wired up (Sanctum) — keep this false.
 // Flip back to true only if you want to demo the panel without the backend.
 
+import { API_BASE_URL } from '../../services/config'
 
 const MOCK_MODE = false
-const BASE_URL = '/api/admin'   // e.g. /api/admin
+const BASE_URL = `${API_BASE_URL}/api/admin`   // e.g. /api/admin
 const TOKEN_KEY = 'sn_admin_token'
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY)
@@ -27,6 +28,14 @@ async function http(path, { method = 'GET', body, auth = true } = {}) {
 
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
+    // Stale/expired/invalid token on a protected call -> force re-login.
+    if (res.status === 401 && auth) {
+      clearToken()
+      localStorage.removeItem('sn_admin_user')
+      if (!location.pathname.endsWith('/admin/login')) {
+        location.href = '/admin/login'
+      }
+    }
     const err = new Error(data.message || 'Request failed')
     err.status = res.status
     err.errors = data.errors || {}
