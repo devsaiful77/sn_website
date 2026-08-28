@@ -4,8 +4,9 @@
 // Real auth is now wired up (Sanctum) — keep this false.
 // Flip back to true only if you want to demo the panel without the backend.
 
+
 const MOCK_MODE = false
-const BASE_URL = '/api/admin'
+const BASE_URL = '/api/admin'   // e.g. /api/admin
 const TOKEN_KEY = 'sn_admin_token'
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY)
@@ -45,10 +46,23 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // Sample data used only while MOCK_MODE = true.
 const MOCK_MESSAGES = [
-  { id: 1, name: 'Rafiq Hasan', email: 'rafiq@example.com', phone: '+880 1712-000000', subject: 'Pipeline fabrication quote', message: 'We need a quote for fabricating carbon-steel piping for a new boiler line. Please advise lead time and pricing.', is_read: false, created_at: '2026-08-20T09:12:00Z' },
-  { id: 2, name: 'Karim Iqbal', email: 'karim@example.com', phone: '', subject: 'Site visit request', message: 'Can your team visit our factory in Tongi next week to assess a structural steel platform installation?', is_read: false, created_at: '2026-08-19T14:40:00Z' },
-  { id: 3, name: 'Nusrat Jahan', email: 'nusrat@example.com', phone: '+880 1913-111111', subject: 'Maintenance contract', message: 'Interested in an annual preventive maintenance contract for our compressors and pumps.', is_read: true, created_at: '2026-08-18T11:05:00Z' },
+  { id: 1, name: 'Rafiq Hasan', email: 'rafiq@example.com', phone: '+880 1712-000000', service: 'Industrial Piping', message: 'We need a quote for fabricating carbon-steel piping for a new boiler line. Please advise lead time and pricing.', is_read: false, created_at: '2026-08-20T09:12:00Z' },
+  { id: 2, name: 'Karim Iqbal', email: 'karim@example.com', phone: '', service: 'Structural Fabrication', message: 'Can your team visit our factory in Tongi next week to assess a structural steel platform installation?', is_read: false, created_at: '2026-08-19T14:40:00Z' },
+  { id: 3, name: 'Nusrat Jahan', email: 'nusrat@example.com', phone: '+880 1913-111111', service: 'Maintenance & Repair', message: 'Interested in an annual preventive maintenance contract for our compressors and pumps.', is_read: true, created_at: '2026-08-18T11:05:00Z' },
 ]
+
+const MOCK_SETTINGS = {
+  site_name: 'SN Engineering Works',
+  logo: '/Contents/images/logo.png',
+  phone: '+880 1911-234567',
+  email: 'info@snengineeringworks.com',
+  whatsapp: '8801911234567',
+  address: 'J-86, Kabir Shopping Tower, Joydebpur, Gazipur',
+  working_hours: 'Sat–Thu, 9am–7pm',
+  map_embed: '',
+  facebook: '', instagram: '', linkedin: '', youtube: '',
+  footer_about: 'A trusted name in mechanical fabrication, industrial piping and maintenance services.',
+}
 
 async function mockLogin({ email, password }) {
   await wait(600)
@@ -100,6 +114,44 @@ export const api = {
         return { message: 'deleted' }
       }
       return http(`/messages/${id}`, { method: 'DELETE' })
+    },
+  },
+
+  // ---- site settings ----
+  settings: {
+    async get() {
+      if (MOCK_MODE) {
+        await wait(200)
+        return { ...MOCK_SETTINGS }
+      }
+      return http('/settings')
+    },
+    // formData: a FormData instance (text fields + optional `logo` file)
+    async update(formData) {
+      if (MOCK_MODE) {
+        await wait(300)
+        for (const [k, v] of formData.entries()) {
+          if (k !== 'logo') MOCK_SETTINGS[k] = v
+        }
+        return { message: 'saved', settings: { ...MOCK_SETTINGS } }
+      }
+      // multipart: DON'T set Content-Type (browser adds the boundary)
+      const res = await fetch(`${BASE_URL}/settings`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
+        },
+        body: formData,
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        const err = new Error(data.message || 'Save failed')
+        err.status = res.status
+        err.errors = data.errors || {}
+        throw err
+      }
+      return data
     },
   },
 }
