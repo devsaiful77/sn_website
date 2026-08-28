@@ -72,22 +72,7 @@ import { whyReasons } from '../data/misc'
     </div>
   </section>
 
-  <!-- GALLERY -->
-  <section class="section section-soft" id="gallery">
-    <div class="container-xl">
-      <div class="section-head" v-reveal>
-        <span class="eyebrow">Gallery</span>
-        <h2 class="section-title">Work In Progress</h2>
-        <div class="divider-bar"></div>
-      </div>
-
-      <GalleryGrid />
-
-      <div class="text-center mt-5" v-reveal>
-        <router-link to="/gallery" class="btn btn-navy">View Full Gallery</router-link>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- TESTIMONIALS -->
   <section class="section">
