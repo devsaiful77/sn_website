@@ -7,6 +7,9 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\SettingController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\CompanyProfileController;
+use App\Http\Controllers\Api\Admin\CompanyProfileController as AdminCompanyProfileController;
+
 /*
 |--------------------------------------------------------------------------
 | API routes
@@ -17,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 // ---- Public ----
 Route::post('contact', [ContactController::class, 'store']);
 Route::get('settings', [SettingController::class, 'index']);   // site settings for the frontend
+Route::get('/company-profile', [CompanyProfileController::class, 'active']);
 
 // ---- Admin ----
 Route::prefix('admin')->group(function () {
@@ -33,5 +37,15 @@ Route::prefix('admin')->group(function () {
         // Site settings
         Route::get('settings', [AdminSettingController::class, 'index']);
         Route::post('settings', [AdminSettingController::class, 'update']); // multipart (logo upload)
+
+        Route::get('/company-profiles', [AdminCompanyProfileController::class, 'index']);
+        Route::get('/company-profiles/{companyProfile}', [AdminCompanyProfileController::class, 'show']);
+        Route::post('/company-profiles', [AdminCompanyProfileController::class, 'store']);
+        // frontend sends this as multipart/form-data with a hidden _method=PUT field,
+        // so the logo file still comes through correctly
+        Route::post('/company-profiles/{companyProfile}', [AdminCompanyProfileController::class, 'update']);
+        Route::post('/company-profiles/{companyProfile}/activate', [AdminCompanyProfileController::class, 'activate']);
+        Route::delete('/company-profiles/{companyProfile}', [AdminCompanyProfileController::class, 'destroy']);
+
     });
 });
