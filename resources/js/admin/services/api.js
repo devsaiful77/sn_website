@@ -239,7 +239,7 @@ export const api = {
       }
       // multipart update needs _method=PUT so Laravel treats it as PUT
       // while still parsing the uploaded file
-      formData.append('_method', 'PUT')
+      formData.append('_method', 'POST')
       // multipart: DON'T set Content-Type (browser adds the boundary)
       const res = await fetch(`${BASE_URL}/company-profiles/${id}`, {
         method: 'POST',

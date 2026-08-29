@@ -7,15 +7,16 @@ import MainNav from './components/MainNav.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import WhatsAppFloat from './components/WhatsAppFloat.vue'
 import BackToTop from './components/BackToTop.vue'
-import { useSettings } from './composables/useSettings'
+import { useCompanyProfile } from './composables/useCompanyProfile'
 
 const route = useRoute()
 const isAdmin = computed(() => route.path.startsWith('/admin'))
 
-// Load site settings (logo, phone, email, address, socials...) once, early,
-// so every component that reads `settings` from useSettings() already has
-// the data by the time it renders (or reacts to it once the fetch lands).
-const { load } = useSettings()
+// Load the active company profile (logo, phone, email, address, socials...)
+// once, early, so every component that reads `profile` from
+// useCompanyProfile() already has the data by the time it renders (or
+// reacts to it once the fetch lands).
+const { load } = useCompanyProfile()
 onMounted(load)
 </script>
 

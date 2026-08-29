@@ -1,10 +1,10 @@
 <script setup>
 import { onMounted } from 'vue'
 import { services } from '../data/services'
-import { useSettings } from '../composables/useSettings'
+import { useCompanyProfile } from '../composables/useCompanyProfile'
 import { asset } from '../services/config'
 
-const { settings, load } = useSettings()
+const { profile, load } = useCompanyProfile()
 onMounted(load)
 </script>
 
@@ -14,17 +14,17 @@ onMounted(load)
       <div class="footer-grid">
         <div>
           <div class="footer-brand">
-            <div class="gear-badge" v-if="!settings.logo"><span>S<br />N</span></div>
-            <img v-else :src="asset(settings.logo)" alt="Logo" class="footer-logo-img" />
-            <div class="footer-brand-name">{{ settings.site_name || 'SN Engineering Works' }}</div>
+            <div class="gear-badge" v-if="!profile.logo"><span>S<br />N</span></div>
+            <img v-else :src="asset(profile.logo)" alt="Logo" class="footer-logo-img" />
+            <div class="footer-brand-name">{{ profile.company_name || 'SN Engineering Works' }}</div>
           </div>
-          <p class="footer-note">{{ settings.footer_about || 'Reliable engineering solutions for industrial & mechanical works — fabrication, piping, and maintenance done right.' }}</p>
+          <p class="footer-note">{{ profile.footer_about || profile.about_company || 'Reliable engineering solutions for industrial & mechanical works — fabrication, piping, and maintenance done right.' }}</p>
           <div class="footer-social">
-            <a v-if="settings.facebook && settings.facebook !== '#'" :href="settings.facebook" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-            <a v-if="settings.instagram && settings.instagram !== '#'" :href="settings.instagram" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
-            <a v-if="settings.linkedin && settings.linkedin !== '#'" :href="settings.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
-            <a v-if="settings.youtube && settings.youtube !== '#'" :href="settings.youtube" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
-            <a v-if="settings.whatsapp" :href="`https://wa.me/${settings.whatsapp}`" target="_blank" rel="noopener" aria-label="WhatsApp">✆</a>
+            <a v-if="profile.facebook && profile.facebook !== '#'" :href="profile.facebook" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+            <a v-if="profile.instagram && profile.instagram !== '#'" :href="profile.instagram" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
+            <a v-if="profile.linkedin && profile.linkedin !== '#'" :href="profile.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+            <a v-if="profile.youtube && profile.youtube !== '#'" :href="profile.youtube" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
+            <a v-if="profile.whatsapp" :href="`https://wa.me/${profile.whatsapp}`" target="_blank" rel="noopener" aria-label="WhatsApp">✆</a>
           </div>
         </div>
 
@@ -45,14 +45,15 @@ onMounted(load)
 
         <div class="foot-col">
           <div class="foot-title">Contact Info</div>
-          <div class="foot-contact-item" v-if="settings.phone"><span class="ic">📞</span> {{ settings.phone }}</div>
-          <div class="foot-contact-item" v-if="settings.email"><span class="ic">✉️</span> {{ settings.email }}</div>
-          <div class="foot-contact-item" v-if="settings.address"><span class="ic">📍</span> {{ settings.address }}</div>
+          <div class="foot-contact-item" v-if="profile.support_number"><span class="ic">☎️</span> {{ profile.support_number }}</div>
+          <div class="foot-contact-item" v-if="profile.phone"><span class="ic">📞</span> {{ profile.phone }}</div>
+          <div class="foot-contact-item" v-if="profile.email"><span class="ic">✉️</span> {{ profile.email }}</div>
+          <div class="foot-contact-item" v-if="profile.address"><span class="ic">📍</span> {{ profile.address }}</div>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <div>© {{ new Date().getFullYear() }} {{ settings.site_name || 'SN Engineering Works' }}. All rights reserved.</div>
+        <div>© {{ new Date().getFullYear() }} {{ profile.company_name || 'SN Engineering Works' }}. All rights reserved.</div>
         <div><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
       </div>
     </div>

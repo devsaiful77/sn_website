@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useSettings } from '../composables/useSettings'
+import { useCompanyProfile } from '../composables/useCompanyProfile'
 
-const { settings, load } = useSettings()
+const { profile, load } = useCompanyProfile()
 onMounted(load)
 </script>
 
@@ -10,14 +10,16 @@ onMounted(load)
   <div class="topbar">
     <div class="container-xl">
       <div class="topbar-left">
-        <span v-if="settings.phone">📞 <a :href="`tel:${settings.phone}`">{{ settings.phone }}</a></span>
-        <span v-if="settings.email">✉️ <a :href="`mailto:${settings.email}`">{{ settings.email }}</a></span>
-        <span v-if="settings.address">📍 {{ settings.address }}</span>
+        <span v-if="profile.support_number || profile.phone">
+          📞 <a :href="`tel:${profile.support_number || profile.phone}`">{{ profile.support_number || profile.phone }}</a>
+        </span>
+        <span v-if="profile.email">✉️ <a :href="`mailto:${profile.email}`">{{ profile.email }}</a></span>
+        <span v-if="profile.address">📍 {{ profile.address }}</span>
       </div>
       <div class="topbar-social">
-        <a v-if="settings.facebook && settings.facebook !== '#'" :href="settings.facebook" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-        <a v-if="settings.linkedin && settings.linkedin !== '#'" :href="settings.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
-        <a v-if="settings.whatsapp" :href="`https://wa.me/${settings.whatsapp}`" target="_blank" rel="noopener" aria-label="WhatsApp">✆</a>
+        <a v-if="profile.facebook && profile.facebook !== '#'" :href="profile.facebook" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+        <a v-if="profile.linkedin && profile.linkedin !== '#'" :href="profile.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+        <a v-if="profile.whatsapp" :href="`https://wa.me/${profile.whatsapp}`" target="_blank" rel="noopener" aria-label="WhatsApp">✆</a>
       </div>
     </div>
   </div>
