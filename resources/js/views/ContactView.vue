@@ -1,7 +1,11 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import PageBanner from '../components/PageBanner.vue'
 import { submitContact } from '../services/contact'
+import { useSettings } from '../composables/useSettings'
+
+const { settings, load } = useSettings()
+onMounted(load)
 
 const form = reactive({ name: '', phone: '', email: '', service: 'Mechanical Fabrication', message: '' })
 const errors = reactive({ name: '', phone: '', email: '', message: '' })
@@ -115,28 +119,36 @@ const faqs = [
         </div>
 
         <div class="col-lg-5" v-reveal="'fade-right'">
-          <div class="contact-item">
+          <div class="contact-item" v-if="settings.phone">
             <div class="ci-icon">📞</div>
-            <div><div class="ci-label">CALL US</div><div class="ci-value">+880 1911-234567</div></div>
+            <div><div class="ci-label">CALL US</div><div class="ci-value">{{ settings.phone }}</div></div>
           </div>
-          <div class="contact-item">
+          <div class="contact-item" v-if="settings.email">
             <div class="ci-icon">✉️</div>
-            <div><div class="ci-label">EMAIL US</div><div class="ci-value">info@snengineeringworks.com</div></div>
+            <div><div class="ci-label">EMAIL US</div><div class="ci-value">{{ settings.email }}</div></div>
           </div>
-          <div class="contact-item">
+          <div class="contact-item" v-if="settings.address">
             <div class="ci-icon">📍</div>
-            <div><div class="ci-label">OFFICE</div><div class="ci-value">J-86, Kabir Shopping Tower, Joydebpur, Gazipur</div></div>
+            <div><div class="ci-label">OFFICE</div><div class="ci-value">{{ settings.address }}</div></div>
           </div>
-          <div class="contact-item">
+          <div class="contact-item" v-if="settings.working_hours">
             <div class="ci-icon">🕐</div>
-            <div><div class="ci-label">WORKING HOURS</div><div class="ci-value">Sat–Thu, 9am–7pm</div></div>
+            <div><div class="ci-label">WORKING HOURS</div><div class="ci-value">{{ settings.working_hours }}</div></div>
           </div>
-          <div class="contact-item">
+          <div class="contact-item" v-if="settings.whatsapp">
             <div class="ci-icon">💬</div>
-            <div><div class="ci-label">WHATSAPP</div><div class="ci-value"><a href="https://wa.me/8801911234567">Chat with us instantly</a></div></div>
+            <div><div class="ci-label">WHATSAPP</div><div class="ci-value"><a :href="`https://wa.me/${settings.whatsapp}`" target="_blank" rel="noopener">Chat with us instantly</a></div></div>
           </div>
 
-          <div class="map-block">Office location map</div>
+          <iframe
+            v-if="settings.map_embed"
+            :src="settings.map_embed"
+            class="map-block"
+            style="border:0; width:100%;"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+          <div v-else class="map-block">Office location map</div>
         </div>
       </div>
     </div>
