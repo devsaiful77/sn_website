@@ -2,9 +2,9 @@
 import { reactive, ref, onMounted } from 'vue'
 import PageBanner from '../components/PageBanner.vue'
 import { submitContact } from '../services/contact'
-import { useSettings } from '../composables/useSettings'
+import { useCompanyProfile } from '../composables/useCompanyProfile'
 
-const { settings, load } = useSettings()
+const { profile, load } = useCompanyProfile()
 onMounted(load)
 
 const form = reactive({ name: '', phone: '', email: '', service: 'Mechanical Fabrication', message: '' })
@@ -119,30 +119,36 @@ const faqs = [
         </div>
 
         <div class="col-lg-5" v-reveal="'fade-right'">
-          <div class="contact-item" v-if="settings.phone">
+          <p v-if="profile.about_company" class="section-sub" style="text-align:left; margin:0 0 18px;">{{ profile.about_company }}</p>
+
+          <div class="contact-item" v-if="profile.support_number">
+            <div class="ci-icon">☎️</div>
+            <div><div class="ci-label">SUPPORT</div><div class="ci-value">{{ profile.support_number }}</div></div>
+          </div>
+          <div class="contact-item" v-if="profile.phone">
             <div class="ci-icon">📞</div>
-            <div><div class="ci-label">CALL US</div><div class="ci-value">{{ settings.phone }}</div></div>
+            <div><div class="ci-label">CALL US</div><div class="ci-value">{{ profile.phone }}</div></div>
           </div>
-          <div class="contact-item" v-if="settings.email">
+          <div class="contact-item" v-if="profile.email">
             <div class="ci-icon">✉️</div>
-            <div><div class="ci-label">EMAIL US</div><div class="ci-value">{{ settings.email }}</div></div>
+            <div><div class="ci-label">EMAIL US</div><div class="ci-value">{{ profile.email }}</div></div>
           </div>
-          <div class="contact-item" v-if="settings.address">
+          <div class="contact-item" v-if="profile.address">
             <div class="ci-icon">📍</div>
-            <div><div class="ci-label">OFFICE</div><div class="ci-value">{{ settings.address }}</div></div>
+            <div><div class="ci-label">OFFICE</div><div class="ci-value">{{ profile.address }}</div></div>
           </div>
-          <div class="contact-item" v-if="settings.working_hours">
+          <div class="contact-item" v-if="profile.working_hours">
             <div class="ci-icon">🕐</div>
-            <div><div class="ci-label">WORKING HOURS</div><div class="ci-value">{{ settings.working_hours }}</div></div>
+            <div><div class="ci-label">WORKING HOURS</div><div class="ci-value">{{ profile.working_hours }}</div></div>
           </div>
-          <div class="contact-item" v-if="settings.whatsapp">
+          <div class="contact-item" v-if="profile.whatsapp">
             <div class="ci-icon">💬</div>
-            <div><div class="ci-label">WHATSAPP</div><div class="ci-value"><a :href="`https://wa.me/${settings.whatsapp}`" target="_blank" rel="noopener">Chat with us instantly</a></div></div>
+            <div><div class="ci-label">WHATSAPP</div><div class="ci-value"><a :href="`https://wa.me/${profile.whatsapp}`" target="_blank" rel="noopener">Chat with us instantly</a></div></div>
           </div>
 
           <iframe
-            v-if="settings.map_embed"
-            :src="settings.map_embed"
+            v-if="profile.map_embed"
+            :src="profile.map_embed"
             class="map-block"
             style="border:0; width:100%;"
             loading="lazy"

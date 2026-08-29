@@ -163,6 +163,138 @@ export const api = {
       return data
     },
   },
+
+
+  // Company Profile
+  companyProfiles: {
+    async list() {
+      if (MOCK_MODE) {
+        await wait(200)
+        return [...MOCK_COMPANY_PROFILES]
+      }
+      return http('/company-profiles')
+    },
+
+    async get(id) {
+      if (MOCK_MODE) {
+        await wait(200)
+        const found = MOCK_COMPANY_PROFILES.find((p) => p.id === id)
+        if (!found) {
+          const err = new Error('Profile not found')
+          err.status = 404
+          throw err
+        }
+        return { ...found }
+      }
+      return http(`/company-profiles/${id}`)
+    },
+
+    // formData: a FormData instance (text fields + optional `logo` file)
+    async create(formData) {
+      if (MOCK_MODE) {
+        await wait(300)
+        const profile = { id: Date.now(), is_active: MOCK_COMPANY_PROFILES.length === 0 }
+        for (const [k, v] of formData.entries()) {
+          if (k !== 'logo') profile[k] = v
+        }
+        if (profile.is_active) {
+          MOCK_COMPANY_PROFILES.forEach((p) => { p.is_active = false })
+        }
+        MOCK_COMPANY_PROFILES.push(profile)
+        return { message: 'created', profile: { ...profile } }
+      }
+      // multipart: DON'T set Content-Type (browser adds the boundary)
+      const res = await fetch(`${BASE_URL}/company-profiles`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
+        },
+        body: formData,
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        const err = new Error(data.message || 'Create failed')
+        err.status = res.status
+        err.errors = data.errors || {}
+        throw err
+      }
+      return data
+    },
+
+    // formData: a FormData instance (text fields + optional `logo` file)
+    async update(id, formData) {
+      if (MOCK_MODE) {
+        await wait(300)
+        const profile = MOCK_COMPANY_PROFILES.find((p) => p.id === id)
+        if (!profile) {
+          const err = new Error('Profile not found')
+          err.status = 404
+          throw err
+        }
+        for (const [k, v] of formData.entries()) {
+          if (k !== 'logo' && k !== '_method') profile[k] = v
+        }
+        return { message: 'updated', profile: { ...profile } }
+      }
+      // multipart update needs _method=PUT so Laravel treats it as PUT
+      // while still parsing the uploaded file
+      formData.append('_method', 'POST')
+      // multipart: DON'T set Content-Type (browser adds the boundary)
+      const res = await fetch(`${BASE_URL}/company-profiles/${id}`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
+        },
+        body: formData,
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        const err = new Error(data.message || 'Save failed')
+        err.status = res.status
+        err.errors = data.errors || {}
+        throw err
+      }
+      return data
+    },
+
+    async activate(id) {
+      if (MOCK_MODE) {
+        await wait(200)
+        const found = MOCK_COMPANY_PROFILES.find((p) => p.id === id)
+        if (!found) {
+          const err = new Error('Profile not found')
+          err.status = 404
+          throw err
+        }
+        MOCK_COMPANY_PROFILES.forEach((p) => { p.is_active = p.id === id })
+        return { message: 'activated', profile: { ...found } }
+      }
+      return http(`/company-profiles/${id}/activate`, { method: 'POST' })
+    },
+
+    async remove(id) {
+      if (MOCK_MODE) {
+        await wait(200)
+        const idx = MOCK_COMPANY_PROFILES.findIndex((p) => p.id === id)
+        if (idx === -1) {
+          const err = new Error('Profile not found')
+          err.status = 404
+          throw err
+        }
+        const wasActive = MOCK_COMPANY_PROFILES[idx].is_active
+        MOCK_COMPANY_PROFILES.splice(idx, 1)
+        if (wasActive && MOCK_COMPANY_PROFILES[0]) MOCK_COMPANY_PROFILES[0].is_active = true
+        return { message: 'deleted' }
+      }
+      return http(`/company-profiles/${id}`, { method: 'DELETE' })
+    },
+  },
+
+
+
+
 }
 
 export default api

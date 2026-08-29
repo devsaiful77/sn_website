@@ -1,15 +1,15 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useSettings } from '../composables/useSettings'
+import { useCompanyProfile } from '../composables/useCompanyProfile'
 
-const { settings, load } = useSettings()
+const { profile, load } = useCompanyProfile()
 onMounted(load)
 </script>
 
 <template>
   <a
-    v-if="settings.whatsapp"
-    :href="`https://wa.me/${settings.whatsapp}`"
+    v-if="profile.whatsapp"
+    :href="`https://wa.me/${profile.whatsapp}`"
     class="wa-float"
     target="_blank"
     rel="noopener"

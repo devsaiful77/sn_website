@@ -8,16 +8,42 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::create('company_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
-            $table->text('value')->nullable();
+
+            // Identity
+            $table->string('company_name');           // replaces old site_name
+            $table->string('company_slogan')->nullable();
+            $table->text('about_company')->nullable();
+            $table->string('logo')->nullable();
+
+            // Contact
+            $table->string('support_number')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('whatsapp')->nullable();
+            $table->text('address')->nullable();
+            $table->string('working_hours')->nullable();
+            $table->text('map_embed')->nullable();
+
+            // Social
+            $table->string('facebook')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('youtube')->nullable();
+
+            // Footer
+            $table->text('footer_about')->nullable();
+
+            // Only one profile should be active at a time
+            $table->boolean('is_active')->default(false);
+
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists('company_profiles');
     }
 };
