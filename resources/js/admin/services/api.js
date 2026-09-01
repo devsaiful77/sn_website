@@ -7,7 +7,7 @@
 import { API_BASE_URL } from '../../services/config'
 
 const MOCK_MODE = false
-const BASE_URL = `${API_BASE_URL}/admin`   // e.g. /api/admin
+const BASE_URL = `${API_BASE_URL}/admin`   // e.g. /api/admin ///
 const TOKEN_KEY = 'sn_admin_token'
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY)
